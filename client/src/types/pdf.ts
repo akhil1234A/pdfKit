@@ -1,8 +1,7 @@
 export type PdfFile = {
   id: string
-  name: string
-  createdAt: string
-  size: number
+  fileName: string
+  uploadDate: string
 }
 
 export type ExtractResponse = {

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "@/context/auth-context"
@@ -10,36 +9,44 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, Loader2 } from "lucide-react"
+import { z } from "zod"
+import { registerSchema } from "@/lib/validations/auth"
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [passwordError, setPasswordError] = useState("")
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const { register, isLoading } = useAuth()
 
-  const validatePasswords = () => {
-    if (password !== confirmPassword) {
-      setPasswordError("Passwords do not match")
+  const validateForm = () => {
+    try {
+      registerSchema.parse({ email, password, confirmPassword })
+      setErrors({})
+      return true
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const formattedErrors: Record<string, string> = {}
+        error.errors.forEach((err) => {
+          if (err.path[0]) {
+            formattedErrors[err.path[0] as string] = err.message
+          }
+        })
+        setErrors(formattedErrors)
+      }
       return false
     }
-    if (password.length < 6) {
-      setPasswordError("Password must be at least 6 characters")
-      return false
-    }
-    setPasswordError("")
-    return true
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!validatePasswords()) return
-    await register(email, password)
+    if (!validateForm()) return
+    await register(email.trim(), password)
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-muted/30">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
             <div className="bg-primary/10 p-2 rounded-full">
@@ -50,7 +57,7 @@ export default function RegisterPage() {
           <CardDescription>Enter your email and password to create your account</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -59,8 +66,9 @@ export default function RegisterPage() {
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+                className={`h-11 ${errors.email ? "border-destructive" : ""}`}
               />
+              {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
@@ -69,8 +77,9 @@ export default function RegisterPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
+                className={`h-11 ${errors.password ? "border-destructive" : ""}`}
               />
+              {errors.password && <p className="text-sm text-destructive mt-1">{errors.password}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm-password">Confirm Password</Label>
@@ -79,13 +88,13 @@ export default function RegisterPage() {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                required
+                className={`h-11 ${errors.confirmPassword ? "border-destructive" : ""}`}
               />
-              {passwordError && <p className="text-sm text-destructive">{passwordError}</p>}
+              {errors.confirmPassword && <p className="text-sm text-destructive mt-1">{errors.confirmPassword}</p>}
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col">
-            <Button className="w-full" type="submit" disabled={isLoading}>
+          <CardFooter className="flex flex-col pt-4">
+            <Button className="w-full h-11" type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

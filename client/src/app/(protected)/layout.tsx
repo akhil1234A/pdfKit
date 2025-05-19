@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useAuth } from "@/context/auth-context"
 import { Navbar } from "@/components/navbar"
 import { Loader2 } from "lucide-react"
@@ -26,9 +25,9 @@ export default function ProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col max-w-7xl mx-auto">
       <Navbar />
-      <main className="flex-1 container py-6">{children}</main>
+      <main className="flex-1 container py-8">{children}</main>
     </div>
   )
 }

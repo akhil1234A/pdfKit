@@ -1,10 +1,13 @@
-export type PdfFile = {
-  id: string
-  name: string
-  createdAt: string
-  size: number
+export type AuthCredentials = {
+  email: string
+  password: string
 }
 
-export type ExtractResponse = {
-  url: string
+export type AuthResponse = {
+  user: {
+    id: string
+    email: string
+  }
+  accessToken: string
+  refreshToken: string
 }

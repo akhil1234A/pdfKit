@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { toast } from "sonner"
@@ -35,6 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (token) {
         try {
+          // For simplicity, we're just checking if token exists
+          // In a real app, you might want to validate the token or use the refresh token
           const userData = JSON.parse(localStorage.getItem("user") || "{}")
           setUser(userData)
         } catch (error) {
@@ -51,21 +54,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuth()
   }, [])
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated and trying to access protected routes
   useEffect(() => {
     if (!isLoading && !user) {
-      const protectedRoutes = ["/dashboard", "/upload", "/my-files"]
-      const isProtectedRoute = protectedRoutes.some((route) =>
-        pathname?.startsWith(route)
-      )
+      const protectedRoutes = ["/dashboard", "/upload", "/my-files", "/pdf"]
+      const isProtectedRoute = protectedRoutes.some((route) => pathname?.startsWith(route))
 
       if (isProtectedRoute) {
         router.push("/login")
-        toast.error("Please login to access this page")
+        toast.error("Authentication required. Please login to access this page.")
       }
     }
   }, [isLoading, user, pathname, router])
 
+  // Handle login
   const handleLogin = async (email: string, password: string) => {
     try {
       setIsLoading(true)
@@ -78,15 +80,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(response.user)
       router.push("/dashboard")
 
-      toast.success("Welcome back!")
+      toast.success("Login successful. Welcome back!")
     } catch (error) {
       console.error("Login error:", error)
-      toast.error("Invalid email or password")
+      toast.error("Login failed. Invalid email or password.")
     } finally {
       setIsLoading(false)
     }
   }
 
+  // Handle registration
   const handleRegister = async (email: string, password: string) => {
     try {
       setIsLoading(true)
@@ -99,15 +102,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(response.user)
       router.push("/dashboard")
 
-      toast.success("Your account has been created")
+      toast.success("Registration successful. Your account has been created.")
     } catch (error) {
       console.error("Registration error:", error)
-      toast.error("Could not create your account")
+      toast.error("Registration failed. Could not create your account.")
     } finally {
       setIsLoading(false)
     }
   }
 
+  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
@@ -115,9 +119,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null)
     router.push("/login")
 
-    toast.success("You have been logged out")
+    toast.success("You have been logged out successfully.")
   }
 
+  // Setup token refresh
   useEffect(() => {
     if (!user) return
 
@@ -129,6 +134,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const response = await refreshToken(refreshTokenValue)
         localStorage.setItem("accessToken", response.accessToken)
 
+        // Optionally update refresh token if the API returns a new one
         if (response.refreshToken) {
           localStorage.setItem("refreshToken", response.refreshToken)
         }
@@ -138,6 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Refresh token every 14 minutes (assuming 15 min expiry)
     const intervalId = setInterval(refreshAccessToken, 14 * 60 * 1000)
 
     return () => clearInterval(intervalId)

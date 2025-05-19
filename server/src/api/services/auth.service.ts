@@ -22,8 +22,12 @@ export class AuthService {
 
     const accessToken = this.generateAccessToken(user.id);
     const refreshToken = this.generateRefreshToken(user.id);
+    const userResponse = {
+      id: user.id,
+      email:user.email
+    }
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user: userResponse };
   }
 
   async login(dto: AuthDto) {
@@ -40,8 +44,12 @@ export class AuthService {
 
     const accessToken = this.generateAccessToken(user.id);
     const refreshToken = this.generateRefreshToken(user.id);
+    const userResponse = {
+      id: user.id,
+      email:user.email
+    }
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user: userResponse };
   }
 
   async refreshToken(refreshToken: string) {
@@ -54,8 +62,12 @@ export class AuthService {
 
       const accessToken = this.generateAccessToken(user.id);
       const newRefreshToken = this.generateRefreshToken(user.id);
+      const userResponse = {
+      id: user.id,
+      email:user.email
+    }
 
-      return { accessToken, refreshToken: newRefreshToken };
+      return { accessToken, refreshToken: newRefreshToken, user: userResponse };
     } catch (error) {
       throw new CustomError('Invalid refresh token', 401);
     }

@@ -81,6 +81,6 @@ export class PdfService {
 
     const signedUrl = await this.s3Service.getSignedUrl(newKey);
     this.logger.info(`Pages extracted for PDF: ${pdfId}, new PDF: ${newPdf.id}`);
-    return { id: newPdf.id, fileName: newPdf.fileName, signedUrl };
+    return { id: newPdf.id, fileName: newPdf.fileName, url: signedUrl };
   }
 }

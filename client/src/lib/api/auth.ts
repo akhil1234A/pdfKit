@@ -1,6 +1,4 @@
-import axios from "axios"
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+import axiosInstance from "@/lib/axios"
 
 export type AuthCredentials = {
   email: string
@@ -17,16 +15,16 @@ export type AuthResponse = {
 }
 
 export const register = async (credentials: AuthCredentials): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/api/auth/register`, credentials)
+  const response = await axiosInstance.post(`/api/auth/register`, credentials)
   return response.data
 }
 
 export const login = async (credentials: AuthCredentials): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/api/auth/login`, credentials)
+  const response = await axiosInstance.post(`/api/auth/login`, credentials)
   return response.data
 }
 
 export const refreshToken = async (refreshToken: string): Promise<AuthResponse> => {
-  const response = await axios.post(`${API_URL}/api/auth/refresh`, { refreshToken })
+  const response = await axiosInstance.post(`/api/auth/refresh`, { refreshToken })
   return response.data
 }
