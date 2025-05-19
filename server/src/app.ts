@@ -38,6 +38,9 @@ export class App {
   private configureRoutes() {
     const authRoutes = this.container.get<AuthRoutes>(AuthRoutes);
     const pdfRoutes = this.container.get<PdfRoutes>(PdfRoutes);
+    this.app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', uptime: process.uptime() });
+    });
     this.app.use('/api/auth', authRoutes.router);
     this.app.use('/api/pdf', pdfRoutes.router);
   }

@@ -21,7 +21,7 @@ export default function ProtectedLayout({
   }
 
   if (!isAuthenticated) {
-    return null // Auth context will handle redirect
+    return null 
   }
 
   return (

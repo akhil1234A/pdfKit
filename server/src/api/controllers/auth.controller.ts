@@ -9,6 +9,12 @@ import { CustomError } from '../../core/errors/custom-error';
 export class AuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
 
+  /**
+   * This controller handles registration of a user
+   * @param req email, password
+   * @param res accessToken, refreshToken, user
+   * @param next 
+   */
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
@@ -19,6 +25,12 @@ export class AuthController {
     }
   }
 
+  /**
+   * This controller handles login 
+   * @param req email password
+   * @param res accessToken, refreshToken, user
+   * @param next 
+   */
   async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
@@ -29,6 +41,12 @@ export class AuthController {
     }
   }
 
+  /**
+   * This method handles refresh token 
+   * @param req refreshToken
+   * @param res accessToken, refreshToken, user
+   * @param next 
+   */
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
       const { refreshToken } = req.body;

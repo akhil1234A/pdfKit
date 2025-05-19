@@ -37,7 +37,6 @@ export default function UploadPage() {
 
       toast.success("Your PDF has been uploaded successfully")
 
-      // Navigate to the my files page
       router.push("/my-files")
     } catch (error) {
       console.error("Upload error:", error)

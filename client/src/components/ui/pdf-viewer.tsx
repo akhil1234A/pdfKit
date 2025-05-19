@@ -109,7 +109,6 @@ export function PdfViewer({ url, onExtract }: PdfViewerProps) {
   const [renderKey, setRenderKey] = useState(0)
   const [documentError, setDocumentError] = useState(false)
   const [isDocumentLoaded, setIsDocumentLoaded] = useState(false)
-  // Use a regular div ref since we just need a container reference
   const documentRef = useRef<HTMLDivElement>(null)
 
   const sensors = useSensors(
@@ -157,13 +156,11 @@ export function PdfViewer({ url, onExtract }: PdfViewerProps) {
         return newItems
       })
 
-      // Force re-render of pages after reordering
       setRenderKey((prev) => prev + 1)
     }
   }, [])
 
   const handleExtract = useCallback(() => {
-    // Filter selected pages in the order they appear in orderedPages
     const orderedSelectedPages = orderedPages.filter((page) => selectedPages.includes(page))
     onExtract(orderedSelectedPages)
   }, [orderedPages, selectedPages, onExtract])

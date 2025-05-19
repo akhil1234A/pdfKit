@@ -29,15 +29,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const pathname = usePathname()
 
-  // Check if user is authenticated on initial load
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("accessToken")
 
       if (token) {
         try {
-          // For simplicity, we're just checking if token exists
-          // In a real app, you might want to validate the token or use the refresh token
           const userData = JSON.parse(localStorage.getItem("user") || "{}")
           setUser(userData)
         } catch (error) {
@@ -54,7 +51,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkAuth()
   }, [])
 
-  // Redirect to login if not authenticated and trying to access protected routes
   useEffect(() => {
     if (!isLoading && !user) {
       const protectedRoutes = ["/dashboard", "/upload", "/my-files", "/pdf"]
@@ -67,7 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isLoading, user, pathname, router])
 
-  // Handle login
   const handleLogin = async (email: string, password: string) => {
     try {
       setIsLoading(true)
@@ -89,7 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // Handle registration
   const handleRegister = async (email: string, password: string) => {
     try {
       setIsLoading(true)
@@ -111,7 +105,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
@@ -122,7 +115,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast.success("You have been logged out successfully.")
   }
 
-  // Setup token refresh
   useEffect(() => {
     if (!user) return
 
@@ -134,7 +126,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const response = await refreshToken(refreshTokenValue)
         localStorage.setItem("accessToken", response.accessToken)
 
-        // Optionally update refresh token if the API returns a new one
         if (response.refreshToken) {
           localStorage.setItem("refreshToken", response.refreshToken)
         }
@@ -144,7 +135,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // Refresh token every 14 minutes (assuming 15 min expiry)
     const intervalId = setInterval(refreshAccessToken, 14 * 60 * 1000)
 
     return () => clearInterval(intervalId)

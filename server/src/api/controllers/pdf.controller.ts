@@ -13,6 +13,13 @@ import { Logger } from '../../infrastructure/logging/logger'
 export class PdfController {
   constructor(@inject(TYPES.PdfService) private pdfService: PdfService) {}
 
+  /**
+   * This method handles the upload of the pdf document
+   * @param req file
+   * @param req userId
+   * @param res 
+   * @param next uploadPdf
+   */
   async upload(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const file = req.file;
@@ -29,6 +36,12 @@ export class PdfController {
     }
   }
 
+  /**
+   * This method to get all the files of the user
+   * @param req userId
+   * @param res Array of pdfs
+   * @param next 
+   */
   async getMyFiles(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
@@ -42,6 +55,12 @@ export class PdfController {
     }
   }
 
+/**
+ * This method gets the single pdf
+ * @param req id userId
+ * @param res 
+ * @param next 
+ */
   async getSignedUrl(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
@@ -56,6 +75,13 @@ export class PdfController {
     }
   }
 
+  /**
+   * This method extract pages and create new pdf
+   * @param req id userId
+   * @param req pages
+   * @param res 
+   * @param next 
+   */
   async extractPages(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;

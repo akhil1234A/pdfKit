@@ -35,11 +35,9 @@ export default function DashboardPage() {
       toast.loading("Preparing download...")
       const url = await getSignedUrl(id)
 
-      // Find the PDF to get its name
       const pdf = pdfs.find((p) => p.id === id)
       const fileName = pdf ? pdf.fileName : `document-${id}.pdf`
 
-      // Create a link and trigger download
       const link = document.createElement("a")
       link.href = url
       link.download = fileName
