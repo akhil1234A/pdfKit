@@ -18,26 +18,13 @@ PDF Kit is a web application that allows users to upload PDF files, view their p
 - **Frontend**: Next.js, React, TypeScript, Tailwind CSS, Shadcn UI, react-pdf, @dnd-kit
 - **Backend**: Node.js, Express, TypeScript, MongoDB, AWS S3
 - **Authentication**: JSON Web Tokens (JWT)
-- **Deployment**: Vercel (frontend), [Backend hosting TBD]
+- **Deployment**: Vercel (frontend), Render (backend)
 
 ## Screenshots
 
-*Add screenshots here to showcase the UI (e.g., upload page, PDF viewer, file list). To include screenshots:*
-
-1. Place images in a `screenshots/` folder in the repository.
-2. Update this section with Markdown image links, e.g.:
-
-```markdown
-![Upload Page](screenshots/uploadFile.png)
-![PDF Viewer](screenshots/pdfKit-pages.png)
-![File List](screenshots/pdfKit-dashboard.png)
-```
-
-*Current placeholders (replace with actual images):*
-
-- Upload Page: *TBD*
-- PDF Viewer: *TBD*
-- File List: *TBD*
+- Upload Page: ![Upload Page](screenshots/pdfKit-uploadFile.png)
+- PDF Viewer: ![PDF Viewer](screenshots/pdfKit-pages.png)
+- File List: ![File List](screenshots/pdfKit-dashboard.png)
 
 ## Prerequisites
 
