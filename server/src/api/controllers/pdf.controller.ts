@@ -9,6 +9,7 @@ import { ExtractDto } from '../../core/dtos/extract.dto';
 import { CustomError } from '../../core/errors/custom-error';
 import { CustomRequest } from '../../core/types/express';
 import { Logger } from '../../infrastructure/logging/logger'
+import { MESSAGES, STATUS_CODES } from '@/core/constants/contants';
 
 export class PdfController {
   constructor(@inject(TYPES.PdfService) private pdfService: PdfService) {}
@@ -26,11 +27,11 @@ export class PdfController {
       const userId = req.user?.id;
       Logger.info("file recieved for upload in backend");
       if (!file || !userId) {
-        throw new CustomError('File and user ID required', 400);
+        throw new CustomError(MESSAGES.FILE_USER_ID_REQUIRED, STATUS_CODES.BAD_REQUEST);
       }
       Logger.info("file uploaded successfully");
       const result = await this.pdfService.uploadPdf(file, userId);
-      res.status(201).json(result);
+      res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }
@@ -46,10 +47,10 @@ export class PdfController {
     try {
       const userId = req.user?.id;
       if (!userId) {
-        throw new CustomError('User ID required', 400);
+        throw new CustomError(MESSAGES.USER_ID_REQUIRED, STATUS_CODES.BAD_REQUEST);
       }
       const files = await this.pdfService.getUserPdfs(userId);
-      res.json(files);
+      res.status(STATUS_CODES.OK).json(files);
     } catch (error) {
       next(error);
     }
@@ -66,10 +67,10 @@ export class PdfController {
       const { id } = req.params;
       const userId = req.user?.id;
       if (!userId) {
-        throw new CustomError('User ID required', 400);
+        throw new CustomError(MESSAGES.USER_ID_REQUIRED, STATUS_CODES.BAD_REQUEST);
       }
       const url = await this.pdfService.getSignedUrl(id, userId);
-      res.json({ url });
+      res.status(STATUS_CODES.OK).json({ url });
     } catch (error) {
       next(error);
     }
@@ -88,10 +89,10 @@ export class PdfController {
       const { pages } = req.body;
       const userId = req.user?.id;
       if (!userId) {
-        throw new CustomError('User ID required', 400);
+        throw new CustomError(MESSAGES.USER_ID_REQUIRED, STATUS_CODES.BAD_REQUEST);
       }
       const result = await this.pdfService.extractPages(id, pages, userId);
-      res.json(result);
+      res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }

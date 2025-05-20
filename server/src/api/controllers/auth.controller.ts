@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { AuthDto } from '../../core/dtos/auth.dto';
 import { validate } from '../../core/dtos/validate';
 import { CustomError } from '../../core/errors/custom-error';
+import { STATUS_CODES, MESSAGES } from '@/core/constants/contants';
 
 export class AuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
@@ -19,7 +20,7 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const tokens = await this.authService.register({ email, password });
-      res.status(201).json({ message: 'User registered', ...tokens });
+      res.status(STATUS_CODES.CREATED).json({ message: MESSAGES.REGISTER_SUCCESS, ...tokens });
     } catch (error) {
       next(error);
     }
@@ -35,7 +36,7 @@ export class AuthController {
     try {
       const { email, password } = req.body;
       const tokens = await this.authService.login({ email, password });
-      res.json({ message: 'Login successful', ...tokens });
+      res.status(STATUS_CODES.OK).json({ message: MESSAGES.LOGIN_SUCCESS, ...tokens });
     } catch (error) {
       next(error);
     }
@@ -51,10 +52,10 @@ export class AuthController {
     try {
       const { refreshToken } = req.body;
       if (!refreshToken) {
-        throw new CustomError('Refresh token required', 400);
+        throw new CustomError(MESSAGES.REFRESH_TOKEN_REQUIRED, STATUS_CODES.BAD_REQUEST);
       }
       const tokens = await this.authService.refreshToken(refreshToken);
-      res.json({ message: 'Token refreshed', ...tokens });
+      res.status(STATUS_CODES.OK).json({ message: MESSAGES.REFRESH_SUCCESS, ...tokens });
     } catch (error) {
       next(error);
     }
