@@ -9,7 +9,7 @@ import { ExtractDto } from '../../core/dtos/extract.dto';
 import { CustomError } from '../../core/errors/custom-error';
 import { CustomRequest } from '../../core/types/express';
 import { Logger } from '../../infrastructure/logging/logger'
-import { MESSAGES, STATUS_CODES } from '@/core/constants/contants';
+import { MESSAGES, STATUS_CODES } from '../../core/constants/contants';
 
 export class PdfController {
   constructor(@inject(TYPES.PdfService) private pdfService: PdfService) {}

@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { AuthDto } from '../../core/dtos/auth.dto';
 import { validate } from '../../core/dtos/validate';
 import { CustomError } from '../../core/errors/custom-error';
-import { STATUS_CODES, MESSAGES } from '@/core/constants/contants';
+import { STATUS_CODES, MESSAGES } from '../../core/constants/contants';
 
 export class AuthController {
   constructor(@inject(TYPES.AuthService) private authService: AuthService) {}
